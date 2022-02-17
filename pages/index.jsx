@@ -1,4 +1,6 @@
 import { useEffect } from 'react'
+import { parseCookies } from 'nookies'
+import { baseURL } from './util/auth'
 
 const index = ({user}) => {
 
@@ -10,6 +12,22 @@ const index = ({user}) => {
 
   return <div> Homepage </div>
 }
+
+index.getInitialProps = async (ctx) => {
+  try {
+    const token = parseCookies(ctx)
+    const res = await axios.get(`${baseURL}/api/v1/posts`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    return {postData: res.data}
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 
 export default index
 
