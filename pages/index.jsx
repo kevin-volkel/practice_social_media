@@ -25,6 +25,7 @@ index.getInitialProps = async (ctx) => {
     return {postData: res.data}
   } catch (err) {
     console.error(err)
+    return {errorLoading: true}
   }
 }
 
