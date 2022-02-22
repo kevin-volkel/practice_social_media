@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react'
 import { parseCookies } from 'nookies'
 import { baseURL } from './util/auth'
+import { NoPosts } from './components/layout/NoData'
 import axios from 'axios'
+import { Segment } from 'semantic-ui-react'
+import CreatePost from './components/post/CreatePost'
+import CardPost from './components/post/CardPost'
 
 const index = ({user, postData, errorLoading}) => {
 
@@ -14,10 +18,36 @@ const index = ({user, postData, errorLoading}) => {
     document.title = `Welcome ${user.name.split(' ')[0]}`
   }, [])
 
-  return <div> Homepage </div>
+  useEffect(() => {
+    showToastr && setTimeout( () => setShowToastr(false), 3000)
+  }, [showToastr])
+
+  if(!posts || errorLoading) return <NoPosts /> 
+  
+
+  return (
+    <>
+      <Segment>
+        <CreatePost 
+          user={user}
+          setPosts={setPosts}
+        />
+        {posts.map( (post) => {
+          return <CardPost 
+            key={post._id}
+            post={post}
+            user={user}
+            setPosts={setPosts}
+            setShowToastr={setShowToastr}
+          />
+        })}
+      </Segment>
+    </>
+  )
 }
 
 index.getInitialProps = async (ctx) => {
+  console.log('test');
   try {
     const { token } = parseCookies(ctx)
     const res = await axios.get(`${baseURL}/api/v1/posts`, {

@@ -46,7 +46,7 @@ const SearchComponent = () => {
 
   return (
     <Search
-      style={{marginTop: '2rem'}}
+      // style={{marginTop: '2rem'}}
       loading={loading}
       results={results || null}
       value={text}

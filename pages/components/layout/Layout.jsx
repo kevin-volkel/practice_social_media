@@ -21,7 +21,7 @@ const Layout = ({ children, user }) => {
       <HeadTag />
       {user ? (
         <>
-          <div style={{ marginLeft: '1rem', marginRight: '1rem' }}>
+          <div style={{ marginLeft: '1rem', marginRight: '1rem', marginTop: '2rem' }}>
             <Ref innerRef={contextRef}>
               <Grid>
                 <Grid.Column width={2}>

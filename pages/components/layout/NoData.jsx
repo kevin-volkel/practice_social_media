@@ -1,6 +1,6 @@
 import {Message, Button} from 'semantic-ui-react'
 
-export const NoData = () => {
+export const NoProfilePost = () => {
   return (
     <>
       <Message 
@@ -19,8 +19,27 @@ export const NoData = () => {
   );
 }
 
-export const NoFollowData = () => {
-
+export const NoFollowData = ({
+  profileName,
+  followersComponent = true,
+  followingComponent = true,
+}) => {
+  <>
+    {followersComponent && (
+      <Message 
+        icon="user outline"
+        info
+        content={`${profileName.split(' ')[0]} does not have followers`}
+      />
+    )}
+    {followingComponent && (
+      <Message 
+        icon="user outline"
+        info
+        content={`${profileName.split(' ')[0]} does not follow anyone`}
+      />
+    )}
+  </>
 }
 
 export const NoMessages = () => {
