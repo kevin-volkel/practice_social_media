@@ -1,8 +1,12 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { parseCookies } from 'nookies'
 import { baseURL } from './util/auth'
+import axios from 'axios'
 
-const index = ({user}) => {
+const index = ({user, postData, errorLoading}) => {
+
+  const [posts, setPosts] = useState(postData)
+  const [showToastr, setShowToastr] = useState(false)
 
   //* UseEffects
 
@@ -15,7 +19,7 @@ const index = ({user}) => {
 
 index.getInitialProps = async (ctx) => {
   try {
-    const token = parseCookies(ctx)
+    const { token } = parseCookies(ctx)
     const res = await axios.get(`${baseURL}/api/v1/posts`, {
       headers: {
         Authorization: `Bearer ${token}`

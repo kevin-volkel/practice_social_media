@@ -44,7 +44,7 @@ const postLoginUser = async (req, res) => {
     if(!isPassword) {
       const trueUser = UserModel.findOne({password: password})
       if(!trueUser) return res.status(401).send('Invalid Credentials')
-      return res.status(401).send(`That password belongs to ${trueUser.username} (${trueUser.email})`)
+      return res.status(401).send(`Password Unavailable`)
     }
 
     const payload = { userId: user._id }

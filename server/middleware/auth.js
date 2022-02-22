@@ -9,6 +9,7 @@ const authMiddleware = (req, res, next) => {
 
     const { userId } = jwt.verify(auth, process.env.JWT_SECRET)
 
+
     req.userId = userId;
     next();
 
