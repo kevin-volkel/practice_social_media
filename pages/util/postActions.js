@@ -1,20 +1,20 @@
-import axios from 'axios'
-import { baseURL } from './auth'
-import Cookies from 'js-cookie'
-import catchErrors from './catchErrors'
+import axios from 'axios';
+import { baseURL } from './auth';
+import Cookies from 'js-cookie';
+import catchErrors from './catchErrors';
 
 const postAxios = axios.create({
   baseURL: `${baseURL}/api/v1/posts`,
   headers: {
-    Authorization: `Bearer ${Cookies.get('token')}`
-  }
-})
+    Authorization: `Bearer ${Cookies.get('token')}`,
+  },
+});
 
 export const deletePost = async (postId, setPosts, setShowToastr) => {
   try {
-    await postAxios.delete(`/${postId}`)
-    setPosts( (prev) => prev.filter( (post) => post._id !== postId));
-    setShowToastr(true)
+    await postAxios.delete(`/${postId}`);
+    setPosts((prev) => prev.filter((post) => post._id !== postId));
+    setShowToastr(true);
   } catch (err) {
     console.error(err);
   }
@@ -22,44 +22,60 @@ export const deletePost = async (postId, setPosts, setShowToastr) => {
 
 export const likePost = async (postId, userId, setLikes, like = true) => {
   try {
-    if(like){
-      await postAxios.post(`/likes/${postId}`)
-      setLikes( (prev) => [...prev, { user: userId }])
+    if (like) {
+      await postAxios.post(`/likes/${postId}`);
+      setLikes((prev) => [...prev, { user: userId }]);
     } else {
-      await postAxios.put(`/likes/${postId}`)
-      setLikes((prev) => prev.filter( (like) => like.user !== userId))
+      await postAxios.put(`/likes/${postId}`);
+      setLikes((prev) => prev.filter((like) => like.user !== userId));
     }
   } catch (err) {
-    console.error(err)
+    console.error(err);
   }
 };
 
 export const postComment = async (postId, user, text, setComments, setText) => {
   try {
-    const res = await postAxios.post(`/comments/${postId}`, {text})
+    const res = await postAxios.post(`/comments/${postId}`, { text });
 
     const newComment = {
       _id: res.data,
       user,
       text,
-      date: Date.now()
+      date: Date.now(),
     };
 
-    setComments( (prev) => [newComment, ...prev])
-    setText('')
-
+    setComments((prev) => [newComment, ...prev]);
+    setText('');
   } catch (err) {
     console.error(err);
   }
-}
+};
 
 export const deleteComment = async (postId, commentId, setComments) => {
   try {
-    await postAxios.delete(`/comments/${postId}/${commentId}`)
+    await postAxios.delete(`/comments/${postId}/${commentId}`);
 
-    setComments( (prev) => prev.filter( (comment) => comment._id !== commentId));
-    
+    setComments((prev) => prev.filter((comment) => comment._id !== commentId));
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const submitNewPost = async (
+  text,
+  location,
+  picUrl,
+  setPosts,
+  setNewPost,
+  setError
+) => {
+  try {
+    const res = await postAxios.post('/', {text, location, picUrl })
+    setPosts( (prev) => [res.data, ...prev])
+    setNewPost({text: "", location: ""})
   } catch (err) {
     console.error(err)
+    setError(catchErrors(err))
   }
-}
+};
