@@ -17,14 +17,9 @@ import LikesList from './LikesList'
 import ImageModal from './ImageModal'
 import NoImageModal from './NoImageModal'
 import calculateTime from '../../util/calculateTime'
-import { deletePost, likePost } from '../../util/postActions'
-import { getIcon } from '../../util/getIcon'
+import { deletePost, likePost } from '../../util/postActions';
 
 const CardPost = ({ post, user, setPosts, setShowToastr }) => {
-
-  const [icon, setIcon] = useState(getIcon())
-  
-  
   
   const [likes, setLikes] = useState(post.likes)
   const isLiked = likes.find( (like) => like.user === user._id)
@@ -32,10 +27,6 @@ const CardPost = ({ post, user, setPosts, setShowToastr }) => {
   const [comments, setComments] = useState(post.comments)
   const [error, setError] = useState(null)
   const [showModal, setShowModal] = useState(false)
-  
-  useEffect(() => {
-    setIcon(getIcon())
-  }, [isLiked])
 
   const addPropsToModal = () => ({
     post,
@@ -111,7 +102,7 @@ const CardPost = ({ post, user, setPosts, setShowToastr }) => {
         </Card.Content>
         <Card.Content extra>
             <Icon 
-              name={icon}
+              name={isLiked ? 'heart' : 'heart outline'}
               color={isLiked ? 'red' : undefined}
               style={{ cursor: 'pointer' }}
               onClick={() => likePost(post._id, user._id, setLikes, !isLiked)}

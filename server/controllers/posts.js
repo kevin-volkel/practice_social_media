@@ -5,10 +5,10 @@ const uuid = require('uuid').v4;
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 * CREATE A POST
 * .post('/')
-* req.body {text, location, picUrl}
+* req.body {text, location, picURL}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 const createPost = async (req, res) => {
-  const { text, location, picUrl } = req.body;
+  const { text, location, picURL } = req.body;
 
   if (!text.length)
     return res.status(401).send('Text must be at least 1 character');
@@ -19,8 +19,9 @@ const createPost = async (req, res) => {
       text,
     };
     if (location) newPost.location = location;
-    if (picUrl) newPost.picUrl = picUrl;
+    if (picURL) newPost.picURL = picURL;
 
+    console.log(newPost)
     const post = await new PostModel(newPost).save();
     const postCreated = await PostModel.findById(post._id).populate('user');
 

@@ -65,13 +65,13 @@ export const deleteComment = async (postId, commentId, setComments) => {
 export const submitNewPost = async (
   text,
   location,
-  picUrl,
+  picURL,
   setPosts,
   setNewPost,
   setError
 ) => {
   try {
-    const res = await postAxios.post('/', {text, location, picUrl })
+    const res = await postAxios.post('/', {text, location, picURL })
     setPosts( (prev) => [res.data, ...prev])
     setNewPost({text: "", location: ""})
   } catch (err) {
