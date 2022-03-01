@@ -55,6 +55,9 @@ const getUserPosts = async (req, res) => {
 
 const getFollowers = async (req, res) => {
   try {
+    const { userId } = req.params;
+    const user = await FollowerModel.findOne({user: userId}).populate("followers.user")
+    return res.status(200).json(user.followers)
   } catch (err) {
     console.error(err);
     return res.status(500).send('error @ getFollowers');
@@ -63,6 +66,9 @@ const getFollowers = async (req, res) => {
 
 const getFollowing = async (req, res) => {
   try {
+    const { userId } = req.params;
+    const user = await FollowerModel.findOne({user: userId}).populate("following.user")
+    return res.status(200).json(user.following)
   } catch (err) {
     console.error(err);
     return res.status(500).send('error @ getFollowing');

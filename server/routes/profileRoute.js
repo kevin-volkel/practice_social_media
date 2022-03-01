@@ -13,4 +13,5 @@ const {
 router.route('/:username').get(getProfile);
 router.route('/posts/:username').get(getUserPosts);
 
+
 module.exports = router;
