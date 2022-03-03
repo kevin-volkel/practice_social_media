@@ -11,7 +11,7 @@ const searchUsers = async (req, res) => {
     })
     res.status(200).json(results)
   } catch(err) {
-    console.log('search error at controllers/search', err)
+    console.error('search error at controllers/search', err)
     res.status(500).send('search error @ controllers/search')
   }
 }

@@ -21,7 +21,7 @@ const createPost = async (req, res) => {
     if (location) newPost.location = location;
     if (picURL) newPost.picURL = picURL;
 
-    console.log(newPost)
+    // console.log(newPost)
     const post = await new PostModel(newPost).save();
     const postCreated = await PostModel.findById(post._id).populate('user');
 

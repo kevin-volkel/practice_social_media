@@ -2,7 +2,7 @@ const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
 
 const uploadProfilePic = async (req, res) => {
-  console.log(req.files);
+  // console.log(req.files);
 
   try {
     const src = await cloudinary.uploader.upload(req.files.image.tempFilePath, {

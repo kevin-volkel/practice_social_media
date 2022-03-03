@@ -38,7 +38,7 @@ const SearchComponent = () => {
 
         setResults(res.data)
       } catch (err) {
-        console.log('Error Searching @ Search Component', err)
+        console.error('Error Searching @ Search Component', err)
       }
     }
     setLoading(false)

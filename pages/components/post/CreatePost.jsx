@@ -49,7 +49,7 @@ const CreatePost = ({ user, setPosts }) => {
       });
       const res = await axios.post('/api/v1/upload', formData);
       picURL = res.data.src;
-      console.log(`PicUrl: ${picURL}`)
+      // console.log(`PicUrl: ${picURL}`)
     }
 
     await submitNewPost(

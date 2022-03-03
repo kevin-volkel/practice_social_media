@@ -46,7 +46,6 @@ const index = ({ user, postData, errorLoading }) => {
 };
 
 index.getInitialProps = async (ctx) => {
-  console.log('test');
   try {
     const { token } = parseCookies(ctx);
     const res = await axios.get(`${baseURL}/api/v1/posts`, {
