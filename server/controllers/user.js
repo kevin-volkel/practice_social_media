@@ -103,10 +103,12 @@ const createUser = async (req, res) => {
     let profileFields = {};
     profileFields.user = user._id;
     if (bio) profileFields.bio = bio;
-    if (twitter) profileFields.twitter = twitter;
-    if (youtube) profileFields.youtube = youtube;
-    if (facebook) profileFields.facebook = facebook;
-    if (instagram) profileFields.instagram = instagram;
+
+    profileFields.social = {};
+    if (twitter) profileFields.social.twitter = twitter;
+    if (youtube) profileFields.social.youtube = youtube;
+    if (facebook) profileFields.social.facebook = facebook;
+    if (instagram) profileFields.social.instagram = instagram;
 
     await new ProfileModel(profileFields).save();
     await new FollowerModel({
