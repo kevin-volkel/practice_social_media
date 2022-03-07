@@ -39,6 +39,7 @@ const uploadRoute = require('./server/routes/uploadPicRoute')
 const searchRoute = require('./server/routes/searchRoute')
 const postsRoute = require('./server/routes/postsRoute')
 const profileRoute = require('./server/routes/profileRoute')
+const messageRoute = require('./server/routes/messageRoute')
 
 app.use('/api/v1/user', userRoute);
 app.use('/api/v1/auth', authRoute);
@@ -46,6 +47,19 @@ app.use('/api/v1/upload', uploadRoute)
 app.use('/api/v1/search', searchRoute)
 app.use('/api/v1/posts', authMiddleware, postsRoute)
 app.use('/api/v1/profile', authMiddleware, profileRoute)
+app.use('/api/v1/messages', authMiddleware, messageRoute)
+
+//! SOCKETS
+const { Server } = require("socket.io");
+
+const io = new Server(nextApp, 3000);
+// const io = require('socket.io')(server)
+
+io.on('connect', (socket) => {
+  socket.on('pingServer', (data) => {
+    console.log(data);
+  })
+})
 
 connectDB();
 

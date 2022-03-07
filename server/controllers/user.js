@@ -7,6 +7,7 @@ const defaultUserPic = require('../util/defaultProfilePic');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const isEmail = require('validator/lib/isEmail');
+const ChatModel = require('../models/ChatModel');
 
 const getUsernameAvailable = async (req, res) => {
   const { username } = req.params;
@@ -46,6 +47,9 @@ const postLoginUser = async (req, res) => {
       if(!trueUser) return res.status(401).send('Invalid Credentials')
       return res.status(401).send(`Password Unavailable`)
     }
+
+    const chatModel = await ChatModel.findOne({user: user._id})
+    if(!chatModel) await new ChatModel({user: user._id}).save();
 
     const payload = { userId: user._id }
     jwt.sign(
