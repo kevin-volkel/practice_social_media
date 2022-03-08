@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 import axios from 'axios';
-import baseURL from './util/auth';
+import { baseURL } from './util/auth';
 import { parseCookies } from 'nookies';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
@@ -24,17 +24,29 @@ const messages = ({ chatsData, user }) => {
   const divRef = useRef();
   const openChatId = useRef();
 
-  useEffect( () => {
-    if(!socket.current) {
-      socket.current = io('http://localhost:3000');
-    }
+  // useEffect( () => {
+  //   if(!socket.current) {
+  //     socket.current = io('http://localhost:3000');
+  //   }
 
-    if(socket.current) {
-      socket.current.emit('pingServer', {name: "Jimmy", age: 235})
-    }
-  }, [])
+  //   if(socket.current) {
+  //     socket.current.emit('pingServer', {name: "Jimmy", age: 235})
+  //   }
+  // }, [])
 
-  return <></>;
+  const deleteChat = async (messagesWith) => {
+    try {
+      await axios.delete(`${baseURL}/api/v1/messages/${messagesWith}`, {
+        Headers: { Authorization: `Bearer ${token}` }
+      })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  return <>
+
+  </>;
 };
 
 messages.getInitialProps = async (ctx) => {
