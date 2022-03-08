@@ -6,6 +6,7 @@ import { parseCookies } from 'nookies';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import { Segment, Header, Divider, Comment, Grid } from 'semantic-ui-react';
+import ChatListSearch from './components/chat/ChatListSearch';
 
 const scrollDivToBottom = (divRef) =>
   divRef.current !== null &&
@@ -59,7 +60,7 @@ const messages = ({ chatsData, user }) => {
       />
       <Divider hidden />
       <div style={{ marginTop: '10px' }}>
-        <p>Chat Search Component</p>
+        <ChatListSearch chats={chats} setChats={setChats} />
       </div>
 
       {chats.length > 0 ? (
@@ -67,8 +68,11 @@ const messages = ({ chatsData, user }) => {
           <Grid stackable>
             <Grid.Column width={4}>
               <Comment.Group size="big">
-                <Segment raised style={{overflow: 'auto', maxHeight: '32rem'}}>
-                  {chats.map( (chat, i) => (
+                <Segment
+                  raised
+                  style={{ overflow: 'auto', maxHeight: '32rem' }}
+                >
+                  {chats.map((chat, i) => (
                     <p key={i}>Chat component</p>
                   ))}
                 </Segment>
@@ -77,19 +81,22 @@ const messages = ({ chatsData, user }) => {
             <Grid.Column width={14}>
               {router.query.message && (
                 <>
-                  <div style={{
-                    overflow: 'auto',
-                    overflowX: 'hidden',
-                    maxHeight: "32rem",
-                    height: "32rem",
-                    backgroundColor: 'whitesmoke'
-                  }}>
-                    <div style={{position: 'sticky', top: '0'}}>
+                  <div
+                    style={{
+                      overflow: 'auto',
+                      overflowX: 'hidden',
+                      maxHeight: '32rem',
+                      height: '32rem',
+                      backgroundColor: 'whitesmoke',
+                    }}
+                  >
+                    <div style={{ position: 'sticky', top: '0' }}>
                       <p>Banner Component</p>
                     </div>
-                    {messages.length > 0 && messages.map( (message, i) => {
-                      <p key={i}>Message Component</p>
-                    })}
+                    {messages.length > 0 &&
+                      messages.map((message, i) => {
+                        <p key={i}>Message Component</p>;
+                      })}
                   </div>
 
                   <p>Message Input Component</p>
