@@ -9,6 +9,7 @@ const getChats = async (req, res) => {
     const user = await ChatModel.findOne({ user: userId }).populate(
       'chats.messagesWith'
     );
+    console.log(user);
     let chatsToBeSent = [];
 
     if (user.chats.length > 0) {

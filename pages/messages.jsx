@@ -37,16 +37,72 @@ const messages = ({ chatsData, user }) => {
   const deleteChat = async (messagesWith) => {
     try {
       await axios.delete(`${baseURL}/api/v1/messages/${messagesWith}`, {
-        Headers: { Authorization: `Bearer ${token}` }
-      })
+        Headers: { Authorization: `Bearer ${Cookies.get('token')}` },
+      });
+
+      setChats((prev) =>
+        prev.filter((chat) => chat.messagesWith !== messagesWith)
+      );
+      router.push('/messages', undefined, { shallow: true });
     } catch (err) {
-      console.error(err)
+      console.error(err);
     }
-  }
+  };
 
-  return <>
+  return (
+    <Segment>
+      <Header
+        icon="home"
+        content="Go Back"
+        onClick={() => router.push('/')}
+        style={{ cursor: 'pointer' }}
+      />
+      <Divider hidden />
+      <div style={{ marginTop: '10px' }}>
+        <p>Chat Search Component</p>
+      </div>
 
-  </>;
+      {chats.length > 0 ? (
+        <>
+          <Grid stackable>
+            <Grid.Column width={4}>
+              <Comment.Group size="big">
+                <Segment raised style={{overflow: 'auto', maxHeight: '32rem'}}>
+                  {chats.map( (chat, i) => (
+                    <p key={i}>Chat component</p>
+                  ))}
+                </Segment>
+              </Comment.Group>
+            </Grid.Column>
+            <Grid.Column width={14}>
+              {router.query.message && (
+                <>
+                  <div style={{
+                    overflow: 'auto',
+                    overflowX: 'hidden',
+                    maxHeight: "32rem",
+                    height: "32rem",
+                    backgroundColor: 'whitesmoke'
+                  }}>
+                    <div style={{position: 'sticky', top: '0'}}>
+                      <p>Banner Component</p>
+                    </div>
+                    {messages.length > 0 && messages.map( (message, i) => {
+                      <p key={i}>Message Component</p>
+                    })}
+                  </div>
+
+                  <p>Message Input Component</p>
+                </>
+              )}
+            </Grid.Column>
+          </Grid>
+        </>
+      ) : (
+        <p> No chats </p>
+      )}
+    </Segment>
+  );
 };
 
 messages.getInitialProps = async (ctx) => {
@@ -55,7 +111,7 @@ messages.getInitialProps = async (ctx) => {
     const res = await axios.get(`${baseURL}/api/v1/messages`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-
+    // console.log(res.data);
     return { chatsData: res.data };
   } catch (err) {
     console.error(err);
