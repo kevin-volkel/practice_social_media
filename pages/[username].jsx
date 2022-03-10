@@ -20,6 +20,7 @@ const ProfilePage = ({
   user,
   followStats
 }) => {
+  if(!profile) return null;
   const Router = useRouter();
   const { username } = Router.query;
   const ownAccount = profile.user._id === user._id;
@@ -47,7 +48,6 @@ const ProfilePage = ({
     getPosts();
   }, [Router.query.username])
 
-  if(!profile) return null;
 
   return <Grid stackable>
     <Grid.Row>
