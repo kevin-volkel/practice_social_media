@@ -25,15 +25,30 @@ const messages = ({ chatsData, user }) => {
   const divRef = useRef();
   const openChatId = useRef();
 
-  // useEffect( () => {
-  //   if(!socket.current) {
-  //     socket.current = io('http://localhost:3000');
-  //   }
+  const startServer = async () => {
+    await fetch('/api/socket');
+    socket.current = io();
 
-  //   if(socket.current) {
-  //     socket.current.emit('pingServer', {name: "Jimmy", age: 235})
-  //   }
-  // }, [])
+    socket.current.on('connect', () => {
+      console.log('connected');
+    });
+
+    socket.current.emit('join', { userId: user._id });
+    socket.current.on('connectedUsers', ({ users }) => {
+      users.length > 0 && setConnectedUsers(users);
+    });
+  };
+
+  useEffect(() => {
+    socket.current.emit('loadMessages', {
+      userId: user._id,
+      messagesWith: router.query.message,
+    });
+  }, [router.query.message]);
+
+  useEffect(() => {
+    startServer();
+  }, []);
 
   const deleteChat = async (messagesWith) => {
     try {

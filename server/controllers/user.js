@@ -49,7 +49,22 @@ const postLoginUser = async (req, res) => {
     }
 
     const chatModel = await ChatModel.findOne({user: user._id})
-    if(!chatModel) await new ChatModel({user: user._id}).save();
+    if(!chatModel) await new ChatModel({
+      user: user._id,
+      // chats: [
+      //   {
+      //     messagesWith: user._id,
+      //     messages: [
+      //       {
+      //         msg: "first message",
+      //         date: new Date(),
+      //         sender: user._id,
+      //         receiver: user._id
+      //       }
+      //     ]
+      //   }
+      // ]
+    }).save();
 
     const payload = { userId: user._id }
     jwt.sign(
