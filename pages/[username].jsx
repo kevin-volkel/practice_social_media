@@ -47,6 +47,7 @@ const ProfilePage = ({
     getPosts();
   }, [Router.query.username])
 
+  if(!profile) return null;
 
   return <Grid stackable>
     <Grid.Row>

@@ -40,10 +40,15 @@ const messages = ({ chatsData, user }) => {
   };
 
   useEffect(() => {
-    socket.current.emit('loadMessages', {
-      userId: user._id,
-      messagesWith: router.query.message,
-    });
+    const loadMessages = () => {
+      socket.current.emit('loadMessages', {
+        userId: user._id,
+        messagesWith: router.query.message,
+      });
+    };
+    if(socket.current && router.query.message) {
+      loadMessages();
+    } 
   }, [router.query.message]);
 
   useEffect(() => {
