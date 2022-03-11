@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import { baseURL } from './util/auth';
+import { baseURL } from './auth';
 import { parseCookies } from 'nookies';
 import { Grid } from 'semantic-ui-react';
 import Cookies from 'js-cookie';
-import CardPost from './components/post/CardPost';
-import ProfileMenuTabs from './components/profile/ProfileMenuTabs'
-import ProfileHeader from './components/profile/ProfileHeader';
-import { PlaceholderPosts } from './components/layout/PlaceHolderGroup';
-import { NoProfilePost } from './components/layout/NoData'
-import Followers from './components/profile/Followers';
+import CardPost from '../components/post/CardPost';
+import ProfileMenuTabs from '../components/profile/ProfileMenuTabs'
+import ProfileHeader from '../components/profile/ProfileHeader';
+import { PlaceholderPosts } from '../components/layout/PlaceHolderGroup';
+import { NoProfilePost } from '../components/layout/NoData'
+import Followers from '../components/profile/Followers';
 
 const ProfilePage = ({
   errorLoading,
@@ -20,16 +20,15 @@ const ProfilePage = ({
   user,
   followStats
 }) => {
-  if(!profile) return null;
   const Router = useRouter();
   const { username } = Router.query;
   const ownAccount = profile.user._id === user._id;
-
+  
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(false)
   const [activeItem, setActiveItem] = useState('profile')
   const [loggedUserFollowStats, setLoggedUserFollowStats] = useState(followStats)
-
+  
   const handleItemClick = (clickedTab) => setActiveItem(clickedTab)
 
   useEffect(() => {
@@ -47,8 +46,9 @@ const ProfilePage = ({
     }
     getPosts();
   }, [Router.query.username])
-
-
+  
+  
+  if(!profile) return null;
   return <Grid stackable>
     <Grid.Row>
       <Grid.Column>
@@ -75,9 +75,9 @@ const ProfilePage = ({
             />
             {loading ? (
               <PlaceholderPosts />
-            ) : posts ? (
-              posts.map(post => (
-                <CardPost 
+              ) : posts ? (
+                posts.map(post => (
+                  <CardPost 
                   key={post._id}
                   post={post}
                   user={user}

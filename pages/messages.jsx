@@ -71,12 +71,11 @@ const messages = ({ chatsData, user }) => {
 
           setBannerData({
             name: res.data.name,
-            profilePicURL: res.data.profilePicURL
-          })
+            profilePicURL: res.data.profilePicURL,
+          });
 
           setMessages([]);
-          openChatId.current = router.query.message;
-          
+          openChatId = router.query.message;
         } catch (err) {
           console.error(err);
         }
@@ -90,6 +89,81 @@ const messages = ({ chatsData, user }) => {
 
   useEffect(() => {
     startServer();
+  }, []);
+
+  useEffect(() => {
+    if (socket.current) {
+      socket.current.on('msgSent', ({ newMsg }) => {
+        if (newMsg.receiver === openChatId) {
+          setMessages((prev) => [...prev, newMsg]);
+          setChats((prev) => {
+            const previousChat = prev.find(
+              (chat) => chat.messagesWith === newMsg.receiver
+            );
+            previousChat.lastMessage = newMsg.msg;
+            previousChat.date = newMsg.date;
+
+            return [...prev];
+          });
+        }
+      });
+
+      socket.current.on('newMsgReceived', async ({ newMsg }) => {
+        let senderName;
+
+        if (newMsg.sender === openChatId) {
+          setMessages((prev) => [...prev, newMsg]);
+          setChats((prev) => {
+            const previousChat = prev.find(
+              (chat) => chat.messagesWith === newMsg.receiver
+            );
+            previousChat.lastMessage = newMsg.msg;
+            previousChat.date = newMsg.date;
+
+            return [...prev];
+          });
+        } else {
+          const ifPreviouslyMessaged = chats.some(
+            (chat) => chat.messagesWith === newMsg.sender
+          );
+
+          if (ifPreviouslyMessaged) {
+            setChats((prev) => {
+              const previousChat = prev.find(
+                (chat) => chat.messagesWith === newMsg.receiver
+              );
+              previousChat.lastMessage = newMsg.msg;
+              previousChat.date = newMsg.date;
+
+              senderName = previousChat.name;
+
+              return [
+                previousChat,
+                ...prev.filter((chat) => chat.messagesWith !== newMsg.sender),
+              ];
+            });
+          } else {
+            const res = await axios.get(
+              `${baseURL}/api/v1/messages/user/${router.query.message}`,
+              {
+                headers: { Authorization: `Bearer ${Cookies.get('token')}` },
+              }
+            );
+
+            const { name, profilePicURL } = res.data;
+            senderName = name;
+            const newChat = {
+              messagesWith: newMsg.sender,
+              name,
+              profilePicURL,
+              lastMessage: newMsg.msg,
+              date: newMsg.date,
+            };
+            setChats((prev) => [newChat, ...prev]);
+          }
+        }
+      });
+    }
   }, []);
 
   const deleteChat = async (messagesWith) => {
@@ -108,18 +182,31 @@ const messages = ({ chatsData, user }) => {
   };
 
   useEffect(() => {
-    messages.length > 0 && scrollDivToBottom(divRef)
-  }, [messages])
-  
+    messages.length > 0 && scrollDivToBottom(divRef);
+  }, [messages]);
 
   const sendMsg = (msg) => {
     socket.current.emit('sendNewMsg', {
       userId: user._id,
-      msgToSendUserId: openChatId.current,
-      msg
-    })
+      msgToSendUserId: openChatId,
+      msg,
+    });
   };
-  const deleteMsg = () => {};
+  const deleteMsg = (messageId) => {
+    if (socket.current) {
+      socket.current.emit('deleteMsg', {
+        userId: user._id,
+        messagesWith: openChatId,
+        messageId,
+      });
+
+      socket.current.on('msgDeleted', ({ messageId }) => {
+        setMessages((prev) =>
+          prev.filter((message) => message._id !== messageId)
+        );
+      });
+    }
+  };
 
   return (
     <Segment>
